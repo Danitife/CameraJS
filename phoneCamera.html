@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./icofont/icofont.min.css">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .phone_frame{
+            position: relative;
+            width: 300px;
+            height: 470px;
+            border: 4px solid rgba(128, 128, 128, 0.3);
+            border-radius: 20px;
+            margin: auto;
+            box-shadow: 0 0 5px 5px rgba(128, 128, 128, 0.3) inset;
+            padding: 0 5px 5px 5px;
+            display: flex;
+            align-items: flex-end;
+        }
+        .icon{
+            display: flex;
+            justify-content: space-between;
+            bottom: 5px;
+            width: 100%;
+            right: 0;
+        }
+        .icon div{
+            background-color: teal;
+            padding: 10px;
+            border-radius: 100%;
+        }
+        i{
+            font-size: 26px;
+        }
+        #calldiv{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: none;
+        }
+        #vid-container{
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(128, 128, 128, 0.3);
+            display: none;
+            border-radius: 10px;
+        }
+        #video{
+            width: 100%;
+            height: 60%;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="phone_frame">
+            <div id="calldiv">
+                <input id="screen" type="text">
+                <div class="buttons">
+                    <button onclick="num(1)">1</button>
+                    <button onclick="num(2)">2</button>
+                    <button onclick="num(3)">3</button>
+                    <button onclick="num(4)">4</button>
+                    <button onclick="num(5)">5</button>
+                    <button onclick="num(6)">6</button>
+                    <button onclick="num(6)">6</button>
+                    <button onclick="num(7)">7</button>
+                    <button onclick="num(8)">8</button>
+                    <button onclick="num(9)">9</button>
+                    <button onclick="num(0)">0</button>
+                    <button onclick="num(0)">0</button>
+                    <button onclick="num('*')">*</button>
+                    <button onclick="num('#')">#</button>
+                </div>
+            </div>
+            <div class="icon">
+                <div>
+                    <button onclick="calls()">
+                        <i class="icofont-ui-call"></i>
+                    </button>
+                </div>
+                <div>
+                    <button>
+                        <i class="icofont-ui-message"></i>
+                    </button>
+                </div>
+                <div>
+                    <button onclick="startCam()">
+                        <i class="icofont-camera"></i>
+                    </button>
+                    <aside id="vid-container">
+                        <button onclick="backCam()">
+                            <i class="icofont-caret-left"></i>
+                        </button>
+                        <video id="video" autoplay></video>
+                        <button onclick="takePix()">
+                            <i class="icofont-ui-pointer"></i>
+                        </button>
+                        <canvas id="canvas" width="30" height="30"></canvas>
+                    </aside>
+                </div>
+                <div>
+                    <button>
+                        <i class="icofont-photobucket"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+
+<script>
+    let canvas = document.getElementById('canvas');
+    let video = document.getElementById('video')
+
+    function calls(){
+        document.getElementById('calldiv').style.display = "block"
+    }
+    function num(digit){
+        document.getElementById('screen').value += digit
+    }
+    async function startCam(){
+        document.getElementById('vid-container').style.display = "block"
+        let stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false})
+        video.srcObject = stream
+    }
+    function backCam(){
+        video.srcObject.getTracks()[0].stop();
+        console.log("Vid stopped");
+        document.getElementById('vid-container').style.display = "none"
+    }
+    function takePix(){
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+        let img_data_url = canvas.toDataURL('image/jpeg')
+        console.log(img_data_url)
+    }
+</script>
